@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Wyszukane Filmy{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+        <a href="/search">Wyszukaj kolejny film</a>
+        <table class="table table-bordered">
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Rok wydania</th>
+                <th scope="col">Czas trwania</th>
+                <th scope="col">Rezyser</th>
+            </tr>
+            <tbody>
+            <tr scope="row">
+                <td>{{ filmfound['Title'] }}</td>
+                <td>{{ filmfound['Year'] }}</td>
+                <td>{{ filmfound['Runtime'] }}</td>
+                <td>{{ filmfound['Director'] }}</td>
+                <td>
+                    <a href="/filmadding">Dodaj do listy</a>
+                </td>
+            </tr>
+            </tbody>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

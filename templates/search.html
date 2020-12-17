@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>Wyszukaj film</h1>
+        <form method="POST">
+            <p>{{ form.title.label }} {{ form.title() }}</p>
+            <p>{{ form.year.label }} {{ form.year() }}</p>
+            <p>{{ form.submit() }}</p>
+
+        </form>
+    </div>
+{% endblock %}

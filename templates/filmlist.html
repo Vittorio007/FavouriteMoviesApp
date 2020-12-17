@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}FILMS LIST{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+        <a href="/search">Wyszukaj kolejny film</a>
+        <table class="table table-bordered">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Rok wydania</th>
+                <th scope="col">Czas trwania</th>
+                <th scope="col">Rezyser</th>
+            </tr>
+            <tbody>
+            {% for film in all %}
+            <tr scope="row">
+                <td>{{ film.id }}</td>
+                <td>{{ film.title }}</td>
+                <td>{{ film.year }}</td>
+                <td>{{ film.runtime }}</td>
+                <td>{{ film.director }}</td>
+                <td>
+                    <a href="/filmdelete?id={{ film.id }}">'Usuń'</a>
+                </td>
+            </tr>
+            </tbody>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
