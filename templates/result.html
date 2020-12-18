@@ -10,19 +10,19 @@
             <tr>
                 <th scope="col">Tytuł</th>
                 <th scope="col">Rok wydania</th>
-                <th scope="col">Czas trwania</th>
-                <th scope="col">Rezyser</th>
+                <th scope="col">Typ</th>
             </tr>
             <tbody>
+            {% for film in films %}
             <tr scope="row">
-                <td>{{ filmfound['Title'] }}</td>
-                <td>{{ filmfound['Year'] }}</td>
-                <td>{{ filmfound['Runtime'] }}</td>
-                <td>{{ filmfound['Director'] }}</td>
+                <td>{{ film['Title'] }}</td>
+                <td>{{ film['Year'] }}</td>
+                <td>{{ film['Type'] }}</td>
                 <td>
-                    <a href="/filmadding">Dodaj do listy</a>
+                    <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
                 </td>
             </tr>
+            {% endfor %}
             </tbody>
         </tbody>
     </table>

@@ -58,20 +58,26 @@ def search():
         params.update(apikey)
         dane = requests.get('http://www.omdbapi.com/', params=params)
         filmfound = dane.json()
-        print(filmfound)
-        session['filmfound'] = filmfound
+        films = filmfound['Search']
+        session['films'] = films
 
-        return render_template('result.html', filmfound=filmfound)
+        return render_template('result.html', filmfound=filmfound, films=films)
 
     return render_template('search.html', form=form)
 
 
-@app.route('/filmadding')
+@app.route('/filmadding', methods=['GET', 'POST'])
 def film_adding():
-    film = models.Film(session['filmfound']['Title'],
-                       session['filmfound']['Year'],
-                       session['filmfound']['Runtime'],
-                       session['filmfound']['Director']
+
+    title_to_add = request.args.get('title')
+    params = {'t': title_to_add,
+              'apikey': '2324a7e9'}
+    dane = requests.get('http://www.omdbapi.com/', params=params)
+    film_to_add = dane.json()
+    film = models.Film(film_to_add['Title'],
+                       film_to_add['Year'],
+                       film_to_add['Runtime'],
+                       film_to_add['Director']
                        )
     db.session.add(film)
     db.session.commit()
