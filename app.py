@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 import requests
+import os
 
 from forms import SearchField
 
@@ -9,6 +10,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nasza_baza.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
+APIKEY = os.environ.get('APIKEY')
+
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
@@ -52,14 +55,19 @@ def search():
     if request.method == 'POST':
         title = form.title.data
         year = form.year.data
-        params = {'s': title, 'y': year}
+        types = form.type.data
+        params = {'s': title, 'y': year, 'type': types}
         params = {k: v for k, v in params.items() if v is not None}
-        apikey = {'apikey': '2324a7e9'}
+        apikey = {'apikey': APIKEY}
+        print(types)
         params.update(apikey)
         dane = requests.get('http://www.omdbapi.com/', params=params)
         filmfound = dane.json()
-        films = filmfound['Search']
-        session['films'] = films
+        print(filmfound)
+        try:
+            films = filmfound['Search']
+        except:
+            return redirect(url_for('search'))
 
         return render_template('result.html', filmfound=filmfound, films=films)
 
@@ -71,7 +79,7 @@ def film_adding():
 
     title_to_add = request.args.get('title')
     params = {'t': title_to_add,
-              'apikey': '2324a7e9'}
+              'apikey': APIKEY}
     dane = requests.get('http://www.omdbapi.com/', params=params)
     film_to_add = dane.json()
     film = models.Film(film_to_add['Title'],
@@ -88,7 +96,6 @@ def film_adding():
 @app.route('/filmdelete', methods=['GET'])
 def film_delete():
     film_id = request.args.get('id')
-    print(film_id)
     film_to_delete = db.session.query(models.Film).filter_by(id=film_id)
     film_to_delete.delete()
     db.session.commit()
