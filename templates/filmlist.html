@@ -22,7 +22,10 @@
                 <td>{{ film.runtime }}</td>
                 <td>{{ film.director }}</td>
                 <td>
-                    <a href="/filmdelete?id={{ film.id }}">'Usuń'</a>
+                    <a href="/filmdelete?id={{ film.id }}">Usuń</a>
+                </td>
+                <td>
+                    <a href="/details?imdbID={{ film.film_id }}">Szczegóły</a>
                 </td>
             </tr>
             </tbody>

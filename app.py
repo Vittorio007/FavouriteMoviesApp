@@ -59,10 +59,10 @@ def search():
         params = {'s': title, 'y': year, 'type': types}
         params = {k: v for k, v in params.items() if v is not None}
         apikey = {'apikey': APIKEY}
-        print(types)
         params.update(apikey)
         dane = requests.get('http://www.omdbapi.com/', params=params)
         filmfound = dane.json()
+        session['filmfound'] = filmfound
         print(filmfound)
         try:
             films = filmfound['Search']
@@ -72,6 +72,26 @@ def search():
         return render_template('result.html', filmfound=filmfound, films=films)
 
     return render_template('search.html', form=form)
+
+
+@app.route('/details', methods=['GET', 'POST'])
+def details():
+
+
+    film_id = request.args.get('imdbID')
+    params = {'i': film_id, 'apikey': APIKEY}
+    dane = requests.get('http://www.omdbapi.com/', params=params)
+    film = dane.json()
+    print(film)
+
+    return render_template('details.html', film=film)
+
+
+@app.route('/filmlist', methods=['GET', 'POST'])
+def film_list():
+    films = session['filmfound']['Search']
+    print(films)
+    return render_template('result.html', films=films)
 
 
 @app.route('/filmadding', methods=['GET', 'POST'])
@@ -85,7 +105,8 @@ def film_adding():
     film = models.Film(film_to_add['Title'],
                        film_to_add['Year'],
                        film_to_add['Runtime'],
-                       film_to_add['Director']
+                       film_to_add['Director'],
+                       film_to_add['imdbID']
                        )
     db.session.add(film)
     db.session.commit()

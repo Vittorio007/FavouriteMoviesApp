@@ -7,7 +7,7 @@ class SearchField(FlaskForm):
     title = StringField('Podaj nazwę filmu, który chcesz wyszukać:', validators=[DataRequired()])
     year = IntegerField('Podaj rok produkcji')
     submit = SubmitField('Wyszukaj')
-    type = SelectField('Wybierz typ: ', choices=[(1, ''),
+    type = SelectField('Wybierz typ: ', choices=[('', ''),
                                                  ('movie', 'movie'),
                                                  ('series', 'series'),
                                                  ('episode', 'episode'),
