@@ -1,6 +1,4 @@
-
 {% extends 'base.html' %}
-
 {% block title %}Wyszukane Filmy{% endblock %}
 
 {% block page_content %}
@@ -14,17 +12,17 @@
             </tr>
             <tbody>
             {% for film in films %}
-            <tr scope="row">
-                <td>{{ film['Title'] }}</td>
-                <td>{{ film['Year'] }}</td>
-                <td>{{ film['Type'] }}</td>
-                <td>
-                    <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
-                </td>
-                <td>
-                    <a href="/details?imdbID={{ film['imdbID'] }}">Szczegóły</a>
-                </td>
-            </tr>
+                <tr scope="row">
+                        <td>{{ film['Title'] }}</td>
+                        <td>{{ film['Year'] }}</td>
+                        <td>{{ film['Type'] }}</td>
+                        <td>
+                            <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
+                        </td>
+                        <td>
+                            <a href="/details?imdbID={{ film['imdbID'] }}">Szczegóły</a>
+                        </td>
+                    </tr>
             {% endfor %}
             </tbody>
         </tbody>

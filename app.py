@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 import requests
@@ -14,7 +14,6 @@ APIKEY = os.environ.get('APIKEY')
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-
 
 import models
 
@@ -62,14 +61,15 @@ def search():
         params.update(apikey)
         dane = requests.get('http://www.omdbapi.com/', params=params)
         filmfound = dane.json()
-        session['filmfound'] = filmfound
-        print(filmfound)
         try:
-            films = filmfound['Search']
+            films = [film for film in filmfound['Search'] if not
+                     db.session.query(models.Film).filter_by(film_id=film['imdbID']).all()]
+            session['films'] = films
         except:
+            flash('Nic nie znaleziono.')
             return redirect(url_for('search'))
 
-        return render_template('result.html', filmfound=filmfound, films=films)
+        return render_template('result.html', films=films)
 
     return render_template('search.html', form=form)
 
@@ -77,20 +77,17 @@ def search():
 @app.route('/details', methods=['GET', 'POST'])
 def details():
 
-
     film_id = request.args.get('imdbID')
     params = {'i': film_id, 'apikey': APIKEY}
     dane = requests.get('http://www.omdbapi.com/', params=params)
     film = dane.json()
-    print(film)
 
     return render_template('details.html', film=film)
 
 
 @app.route('/filmlist', methods=['GET', 'POST'])
 def film_list():
-    films = session['filmfound']['Search']
-    print(films)
+    films = session['films']
     return render_template('result.html', films=films)
 
 

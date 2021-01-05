@@ -5,7 +5,16 @@
 {% block page_content %}
 <div class="page-header">
         <a href="/search">Wyszukaj kolejny film</a>
+
         <table class="table table-bordered">
+            <tr>
+                <td><img src="{{ film['Poster'] }}"> </td>
+                <td>
+                    <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
+                </td>
+
+            </tr>
+
             <tr>
                 <th scope="col">Tytuł</th>
                 <td>{{ film['Title'] }}</td>
@@ -15,8 +24,24 @@
                 <td>{{ film['Year'] }}</td>
             </tr>
             <tr>
+                <th scope="col">Gatunek</th>
+                <td>{{ film['Genre'] }}</td>
+            </tr>
+            <tr>
                 <th scope="col">Typ</th>
                 <td>{{ film['Type'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Reżyser</th>
+                <td>{{ film['Director'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Obsada</th>
+                <td>{{ film['Actors'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Produkcja</th>
+                <td>{{ film['Country'] }}, {{ film['Production'] }}</td>
             </tr>
             <tr>
                 <th scope="col">Opis</th>
@@ -27,23 +52,15 @@
                 <td>{{ film['Runtime'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Czas trwania</th>
-                <td>{{ film['Runtime'] }}</td>
-            </tr>
-
-            <td><img src="{{ film['Poster'] }}"> </td>
-
-
-                <td>
-                    <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
-                </td>
-            </tr>
+                <th scope="col">Przychód ze sprzedaży biletów</th>
+                <td>{{ film['BoxOffice'] }}</td>
             </tr>
 
                 <td>
-                    <a href="/filmlist">Powrót do listy</a>
+                    <a href="/filmlist">Powrót do ostatnio wyszukanej listy</a>
                 </td>
 
     </table>
+
 </div>
 {% endblock %}
