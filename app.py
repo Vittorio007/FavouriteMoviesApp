@@ -5,7 +5,7 @@ import requests
 import os
 import logging
 from datetime import date
-from forms import SearchField
+from forms import SearchField, UserForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nasza_baza.db'
@@ -135,6 +135,29 @@ def film_delete():
     film_to_delete.delete()
     db.session.commit()
     return redirect(url_for('films_list'))
+
+
+@app.route('/adduser', methods=['GET', 'POST'])
+def add_user():
+    form = UserForm()
+    if request.method == 'POST':
+        user = models.User(form.name.data,
+                           form.last_name.data,
+                           form.age.data,
+                           form.mail.data,
+                           form.phone.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('User was added correctly.')
+        return redirect(url_for('user_list'))
+    return render_template('adduser.html', form=form)
+
+
+@app.route('/userslist')
+def user_list():
+    all = db.session.query(models.User).all()
+    return render_template('userList.html', all=all)
+
 
 
 if __name__ == '__main__':

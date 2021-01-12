@@ -14,3 +14,10 @@ class SearchField(FlaskForm):
                                                  ('game', 'game')])
 
 
+class UserForm(FlaskForm):
+    name = StringField('Name:', validators=[DataRequired('Field required')])
+    last_name = StringField('Last name:', validators=[DataRequired('Field required')])
+    age = StringField('Age:', validators=[DataRequired('Field required')])
+    mail = StringField('Mail:', validators=[DataRequired('Field required')])
+    phone = StringField('Phone number:', validators=[DataRequired('Field required')])
+    submit = SubmitField('Dodaj użytkownika')
