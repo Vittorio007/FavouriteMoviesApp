@@ -8,7 +8,7 @@ from datetime import date
 from forms import SearchField, UserForm, UserFormEdit
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nasza_baza.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data_base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
 APIKEY = os.environ.get('APIKEY')
@@ -31,8 +31,9 @@ def home():
 
 @app.route('/filmslist')
 def films_list():
-    all = db.session.query(models.Film).all()
-    return render_template('filmlist.html', all=all)
+    login_user_id = session['user_id']
+    all = db.session.query(models.Film).filter_by(user_id=login_user_id)
+    return render_template('filmlist.html', all=all, login_user_id=login_user_id)
 
 
 @app.route('/getfilm/<int:id>')
@@ -88,7 +89,7 @@ def search():
 
 
 @app.route('/details', methods=['GET', 'POST'])
-def details():
+def film_details():
 
     film_id = request.args.get('imdbID')
     params = {'i': film_id, 'apikey': APIKEY}
@@ -114,7 +115,8 @@ def film_adding():
               'apikey': APIKEY}
     dane = requests.get('http://www.omdbapi.com/', params=params)
     film_to_add = dane.json()
-    film = models.Film(film_to_add['Title'],
+    film = models.Film(session['user_id'],
+                       film_to_add['Title'],
                        film_to_add['Year'],
                        film_to_add['Runtime'],
                        film_to_add['Director'],
@@ -156,8 +158,9 @@ def add_user():
 @app.route('/userdetails', methods=['GET'])
 def show_user_details():
     user_id = request.args.get('id')
+    session['user_id'] = user_id
     user_details = db.session.query(models.User).filter_by(id=user_id).first()
-
+    flash(f'USER {user_id} is log in.')
     return render_template('userDetails.html',  user_details=user_details)
 
 

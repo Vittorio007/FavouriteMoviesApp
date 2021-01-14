@@ -3,8 +3,12 @@
 {% block title %}FILMS LIST{% endblock %}
 
 {% block page_content %}
+{% for message in get_flashed_messages() %}
+            <p style="color:green">{{ message }}</p>
+{% endfor %}
 <div class="page-header">
         <a href="/search">Wyszukaj kolejny film</a>
+        <h1>Log in user {{ login_user_id }}</h1>
         <table class="table table-bordered">
             <tr>
                 <th scope="col">Id</th>
