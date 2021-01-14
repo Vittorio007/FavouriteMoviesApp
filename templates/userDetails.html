@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Details of User {{ user_details['id'] }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Details of User {{ user_details['id'] }}</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th scope="col">Name</th>
+                <td>{{ user_details['name'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Last Name</th>
+                <td>{{ user_details['last_name'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Age</th>
+                <td>{{ user_details['age'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Mail</th>
+                <td>{{ user_details['mail'] }}</td>
+            </tr>
+            <tr>
+                <th scope="col">Phone</th>
+                <td>{{ user_details['phone'] }}</td>
+            </tr>
+        </table>
+        <a href="/edituser?id={{ user_details['id'] }}">Edit User</a>
+</div>
+{% endblock %}

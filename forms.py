@@ -20,4 +20,8 @@ class UserForm(FlaskForm):
     age = StringField('Age:', validators=[DataRequired('Field required')])
     mail = StringField('Mail:', validators=[DataRequired('Field required')])
     phone = StringField('Phone number:', validators=[DataRequired('Field required')])
-    submit = SubmitField('Dodaj użytkownika')
+    submit = SubmitField('Add User')
+
+
+class UserFormEdit(UserForm):
+    submit = SubmitField('Confirm Edit User')

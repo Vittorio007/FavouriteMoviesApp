@@ -5,7 +5,7 @@ import requests
 import os
 import logging
 from datetime import date
-from forms import SearchField, UserForm
+from forms import SearchField, UserForm, UserFormEdit
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///nasza_baza.db'
@@ -97,7 +97,7 @@ def details():
     item_name = film['Type'], film['Title']
     app.logger.info(f'Viewing details of {item_name}')
 
-    return render_template('details.html', film=film)
+    return render_template('filmDetails.html', film=film)
 
 
 @app.route('/filmlist', methods=['GET', 'POST'])
@@ -151,6 +151,35 @@ def add_user():
         flash('User was added correctly.')
         return redirect(url_for('user_list'))
     return render_template('adduser.html', form=form)
+
+
+@app.route('/userdetails', methods=['GET'])
+def show_user_details():
+    user_id = request.args.get('id')
+    user_details = db.session.query(models.User).filter_by(id=user_id).first()
+
+    return render_template('userDetails.html',  user_details=user_details)
+
+
+@app.route('/edituser', methods=['GET', 'POST'])
+def edit_user():
+    user_id = request.args.get('id')
+    user_to_edit = db.session.query(models.User).filter_by(id=user_id)
+    form = UserFormEdit()
+    if request.method == 'POST':
+        user_to_edit.update({'name': form.name.data,
+                             'last_name': form.last_name.data,
+                             'age': form.age.data,
+                             'mail': form.mail.data,
+                             'phone': form.phone.data})
+        db.session.commit()
+        flash("User was edit correct.")
+
+        user_details = db.session.query(models.User).filter_by(id=user_id).first()
+        return render_template('userDetails.html', user_details=user_details)
+
+    return render_template('userEdit.html', form=form, user_to_edit=user_to_edit.first())
+
 
 
 @app.route('/userslist')

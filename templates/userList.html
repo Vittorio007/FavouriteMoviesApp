@@ -9,9 +9,6 @@
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Last Name</th>
-                <th scope="col">Age</th>
-                <th scope="col">Mail</th>
-                <th scope="col">Phone</th>
             </tr>
             <tbody>
             {% for user in all %}
@@ -19,12 +16,14 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.last_name }}</td>
-                <td>{{ user.age }}</td>
-                <td>{{ user.mail }}</td>
-                <td>{{ user.phone }}</td>
+                <td>
+                    <a href="/userdetails?id={{ user.id }}">Log In</a>
+                </td>
             </tr>
             </tbody>
             {% endfor %}
+
+
 
         </tbody>
     </table>
