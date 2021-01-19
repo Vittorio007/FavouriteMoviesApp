@@ -75,7 +75,7 @@ def search():
         filmfound = dane.json()
         try:
             films = [film for film in filmfound['Search'] if not
-            db.session.query(models.Film).filter_by(film_id=film['imdbID']).all()]
+            db.session.query(models.Film).filter_by(user_id=session['user_id']).filter_by(film_id=film['imdbID']).all()]
             session['films'] = films
             app.logger.info(f'Tring found by: {params} - result: Found succes')
         except:
