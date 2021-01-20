@@ -4,10 +4,10 @@ from wtforms.validators import DataRequired, Length
 
 
 class SearchField(FlaskForm):
-    title = StringField('Podaj nazwę filmu, który chcesz wyszukać:', validators=[DataRequired()])
-    year = IntegerField('Podaj rok produkcji')
-    submit = SubmitField('Wyszukaj')
-    type = SelectField('Wybierz typ: ', choices=[('', ''),
+    title = StringField('Title:', validators=[DataRequired()])
+    year = IntegerField('Year(optional)')
+    submit = SubmitField('Search')
+    type = SelectField('Type(optional): ', choices=[('', ''),
                                                  ('movie', 'movie'),
                                                  ('series', 'series'),
                                                  ('episode', 'episode'),

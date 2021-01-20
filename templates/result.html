@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Wyszukane Filmy{% endblock %}
+{% block title %}Results{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-        <a href="/search">Wyszukaj kolejny film</a>
+        <a href="/search">New Searching</a>
         <table class="table table-bordered">
             <tr>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Rok wydania</th>
-                <th scope="col">Typ</th>
+                <th scope="col">Title</th>
+                <th scope="col">Year</th>
+                <th scope="col">Type</th>
             </tr>
             <tbody>
             {% for film in films %}
@@ -17,10 +17,10 @@
                         <td>{{ film['Year'] }}</td>
                         <td>{{ film['Type'] }}</td>
                         <td>
-                            <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
+                            <a href="/filmadding?title={{ film['Title'] }}">Add to list</a>
                         </td>
                         <td>
-                            <a href="/details?imdbID={{ film['imdbID'] }}">Szczegóły</a>
+                            <a href="/details?imdbID={{ film['imdbID'] }}">Details</a>
                         </td>
                     </tr>
             {% endfor %}

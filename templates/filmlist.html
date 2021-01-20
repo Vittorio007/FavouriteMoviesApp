@@ -7,15 +7,15 @@
             <p style="color:green">{{ message }}</p>
 {% endfor %}
 <div class="page-header">
-        <a href="/search">Wyszukaj kolejny film</a>
+        <a href="/search">Next searching</a>
         <h1>Log in user {{ login_user_id }}</h1>
         <table class="table table-bordered">
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Rok wydania</th>
-                <th scope="col">Czas trwania</th>
-                <th scope="col">Rezyser</th>
+                <th scope="col">Title</th>
+                <th scope="col">Year</th>
+                <th scope="col">Runtime</th>
+                <th scope="col">Director</th>
             </tr>
             <tbody>
             {% for film in all %}
@@ -26,10 +26,10 @@
                 <td>{{ film.runtime }}</td>
                 <td>{{ film.director }}</td>
                 <td>
-                    <a href="/filmdelete?title={{ film.title }}">Usuń</a>
+                    <a href="/filmdelete?title={{ film.title }}">Delete</a>
                 </td>
                 <td>
-                    <a href="/details?imdbID={{ film.film_id }}">Szczegóły</a>
+                    <a href="/details?imdbID={{ film.film_id }}">Details</a>
                 </td>
             </tr>
             </tbody>
@@ -37,6 +37,6 @@
 
         </tbody>
     </table>
-    <a href="/filmlist">Powrót do ostatnio wyszukanej listy</a>
+    <a href="/filmlist">Go to previous search results</a>
 </div>
 {% endblock %}

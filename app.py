@@ -31,6 +31,9 @@ def home():
 
 @app.route('/filmslist')
 def films_list():
+    """
+    This take objects (models.Film) from data base and show in table.
+    """
     login_user_id = session['user_id']
     all = db.session.query(models.Film).filter_by(user_id=login_user_id)
     return render_template('filmlist.html', all=all, login_user_id=login_user_id)
@@ -38,6 +41,10 @@ def films_list():
 
 @app.route('/getfilm/<int:id>')
 def get_film(id):
+    """
+    This create JSON from object (models.Film) in data base.
+    :param id: id of object (models.Film) in data base
+    """
     film = db.session.query(models.Film).get(int(id))
     data = {'id': film.id, 'title': film.title, 'year': film.year}
     return jsonify(data)
@@ -46,7 +53,7 @@ def get_film(id):
 @app.route('/getfilms')
 def get_films():
     """
-
+    This create JSON from filtered objects (models.Film) in data base.
     """
     title = request.args.get('t')
     films = db.session.query(models.Film).filter_by(title=title.title()).all()
@@ -59,7 +66,8 @@ def get_films():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     """
-
+    This searching data from API on site http://www.omdbapi.com/
+    and show an screen results into table.
     """
     form = SearchField()
 
@@ -90,7 +98,9 @@ def search():
 
 @app.route('/details', methods=['GET', 'POST'])
 def film_details():
-
+    """
+    This take details from API http://www.omdbapi.com/ by params and show results into table.
+    """
     film_id = request.args.get('imdbID')
     params = {'i': film_id, 'apikey': APIKEY}
     dane = requests.get('http://www.omdbapi.com/', params=params)
@@ -103,13 +113,18 @@ def film_details():
 
 @app.route('/filmlist', methods=['GET', 'POST'])
 def film_list():
+    """
+    This show last searching into table taking from session memory.
+    """
     films = session['films']
     return render_template('result.html', films=films)
 
 
 @app.route('/filmadding', methods=['GET', 'POST'])
 def film_adding():
-
+    """
+    This add object (models.Film) to data base.
+    """
     title_to_add = request.args.get('title')
     params = {'t': title_to_add,
               'apikey': APIKEY}
@@ -131,6 +146,9 @@ def film_adding():
 
 @app.route('/filmdelete', methods=['GET'])
 def film_delete():
+    """
+    This delete object (models.Film) to data base.
+    """
     title = request.args.get('title')
     film_to_delete = db.session.query(models.Film).filter_by(title=title)
     app.logger.info(f'{title} was deleted from list.')
@@ -141,6 +159,9 @@ def film_delete():
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def add_user():
+    """
+    This add User into data base using form.
+    """
     form = UserForm()
     if request.method == 'POST':
         user = models.User(form.name.data,
@@ -157,6 +178,9 @@ def add_user():
 
 @app.route('/userdetails', methods=['GET'])
 def show_user_details():
+    """
+    This take object (models.User) and show into table details of this object (User).
+    """
     user_id = request.args.get('id')
     session['user_id'] = user_id
     user_details = db.session.query(models.User).filter_by(id=user_id).first()
@@ -166,6 +190,9 @@ def show_user_details():
 
 @app.route('/edituser', methods=['GET', 'POST'])
 def edit_user():
+    """
+    This edit User details by using form.
+    """
     user_id = request.args.get('id')
     user_to_edit = db.session.query(models.User).filter_by(id=user_id)
     form = UserFormEdit()
@@ -184,9 +211,24 @@ def edit_user():
     return render_template('userEdit.html', form=form, user_to_edit=user_to_edit.first())
 
 
+@app.route('/userdelete', methods=['GET'])
+def user_delete():
+    """
+    This delete object (models.User) to data base.
+    """
+    user_id = request.args.get('id')
+    user_to_delete = db.session.query(models.User).filter_by(id=user_id)
+    app.logger.info(f'User {user_id} was deleted from list.')
+    user_to_delete.delete()
+    db.session.commit()
+    return redirect(url_for('user_list'))
+
 
 @app.route('/userslist')
 def user_list():
+    """
+    This take objects (models.Users) from data base and show into table.
+    """
     all = db.session.query(models.User).all()
     return render_template('userList.html', all=all)
 

@@ -1,63 +1,63 @@
 {% extends 'base.html' %}
 
-{% block title %}Wyszukane Filmy{% endblock %}
+{% block title %}Results{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-        <a href="/search">Wyszukaj kolejny film</a>
+        <a href="/search">New searching</a>
 
         <table class="table table-bordered">
             <tr>
                 <td><img src="{{ film['Poster'] }}"> </td>
                 <td>
-                    <a href="/filmadding?title={{ film['Title'] }}">Dodaj do listy</a>
+                    <a href="/filmadding?title={{ film['Title'] }}">Add to list</a>
                 </td>
 
             </tr>
 
             <tr>
-                <th scope="col">Tytuł</th>
+                <th scope="col">Title</th>
                 <td>{{ film['Title'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Rok wydania</th>
+                <th scope="col">Year</th>
                 <td>{{ film['Year'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Gatunek</th>
+                <th scope="col">Genre</th>
                 <td>{{ film['Genre'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Typ</th>
+                <th scope="col">Type</th>
                 <td>{{ film['Type'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Reżyser</th>
+                <th scope="col">Director</th>
                 <td>{{ film['Director'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Obsada</th>
+                <th scope="col">Actors</th>
                 <td>{{ film['Actors'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Produkcja</th>
+                <th scope="col">Country production</th>
                 <td>{{ film['Country'] }}, {{ film['Production'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Opis</th>
+                <th scope="col">Plot</th>
                 <td>{{ film['Plot'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Czas trwania</th>
+                <th scope="col">Runtime</th>
                 <td>{{ film['Runtime'] }}</td>
             </tr>
             <tr>
-                <th scope="col">Przychód ze sprzedaży biletów</th>
+                <th scope="col">BoxOffice</th>
                 <td>{{ film['BoxOffice'] }}</td>
             </tr>
 
                 <td>
-                    <a href="/filmlist">Powrót do ostatnio wyszukanej listy</a>
+                    <a href="/filmlist">Go to previous search results</a>
                 </td>
 
     </table>

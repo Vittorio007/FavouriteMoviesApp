@@ -29,7 +29,14 @@
                 <th scope="col">Phone</th>
                 <td>{{ user_details['phone'] }}</td>
             </tr>
+            <tr>
+                <td><a href="/edituser?id={{ user_details['id'] }}">Edit User</a></td>
+            </tr>
+            <tr>
+                <td><a href="/filmslist">List of Favourites Movies</a></td>
+            </tr>
+
         </table>
-        <a href="/edituser?id={{ user_details['id'] }}">Edit User</a>
+
 </div>
 {% endblock %}

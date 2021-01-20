@@ -33,3 +33,7 @@ class User(db.Model):
         self.age = age
         self.mail = mail
         self.phone = phone
+
+
+db.create_all()
+
