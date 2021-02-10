@@ -11,10 +11,10 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data_base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
-# APIKEY = os.environ.get('APIKEY')
-logging.basicConfig(level=logging.DEBUG,
-                    filename=f'logs\\ {date.today()}.log',
-                    format='%(asctime)s LEVEL: %(levelname)s MESSAGE: %(message)s')
+APIKEY = os.environ.get('APIKEY')
+# logging.basicConfig(level=logging.DEBUG,
+#                     filename=f'logs\\ {date.today()}.log',
+#                     format='%(asctime)s LEVEL: %(levelname)s MESSAGE: %(message)s')
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
@@ -235,4 +235,4 @@ def user_list():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)

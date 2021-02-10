@@ -1,13 +1,9 @@
-FROM python:3.8.6-alpine
-
-WORKDIR /filmsearch
+FROM docker_base_container
 
 COPY . .
 
-RUN pip install -r requirements.txt
-
-ENV APIKEY = 2324a7e9
-
 EXPOSE 5000
+
+ENV APIKEY='2324a7e9'
 
 CMD python app.py
