@@ -1,4 +1,4 @@
-FROM docker_base_container
+FROM docker_base_image
 
 COPY . .
 

@@ -3,8 +3,6 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
-import logging
-from datetime import date
 from forms import SearchField, UserForm, UserFormEdit
 
 app = Flask(__name__)
@@ -12,10 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data_base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
 APIKEY = os.environ.get('APIKEY')
-# logging.basicConfig(level=logging.DEBUG,
-#                     filename=f'logs\\ {date.today()}.log',
-#                     format='%(asctime)s LEVEL: %(levelname)s MESSAGE: %(message)s')
-
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
@@ -25,7 +19,6 @@ import models
 @app.route('/')
 @app.route('/home')
 def home():
-    app.logger.info('We are in home page !!!!')
     return render_template('home.html')
 
 
@@ -85,10 +78,8 @@ def search():
             films = [film for film in filmfound['Search'] if not
             db.session.query(models.Film).filter_by(user_id=session['user_id']).filter_by(film_id=film['imdbID']).all()]
             session['films'] = films
-            app.logger.info(f'Tring found by: {params} - result: Found succes')
         except:
             flash('Nothing found.')
-            app.logger.info(f'Tring found by: {params} - result: Nothing found')
             return redirect(url_for('search'))
 
         return render_template('result.html', films=films)
@@ -106,7 +97,6 @@ def film_details():
     dane = requests.get('http://www.omdbapi.com/', params=params)
     film = dane.json()
     item_name = film['Type'], film['Title']
-    app.logger.info(f'Viewing details of {item_name}')
 
     return render_template('filmDetails.html', film=film)
 
@@ -140,7 +130,6 @@ def film_adding():
     db.session.add(film)
     db.session.commit()
     item_to_logs = (film_to_add['Type'], film_to_add['Title'])
-    app.logger.info(f'Added {item_to_logs}to list')
     return redirect(url_for('films_list'))
 
 
@@ -151,7 +140,6 @@ def film_delete():
     """
     title = request.args.get('title')
     film_to_delete = db.session.query(models.Film).filter_by(title=title)
-    app.logger.info(f'{title} was deleted from list.')
     film_to_delete.delete()
     db.session.commit()
     return redirect(url_for('films_list'))
@@ -218,7 +206,6 @@ def user_delete():
     """
     user_id = request.args.get('id')
     user_to_delete = db.session.query(models.User).filter_by(id=user_id)
-    app.logger.info(f'User {user_id} was deleted from list.')
     user_to_delete.delete()
     db.session.commit()
     return redirect(url_for('user_list'))
@@ -235,4 +222,4 @@ def user_list():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
