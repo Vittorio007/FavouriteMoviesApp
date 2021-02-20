@@ -3,18 +3,56 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import os
-from forms import SearchField, UserForm, UserFormEdit
+from forms import SearchField, UserForm, UserFormEdit, UserLogIn
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data_base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
-APIKEY = os.environ.get('APIKEY')
+# APIKEY = os.environ.get('APIKEY')
+APIKEY='2324a7e9'
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 import models
 
+
+@login_manager.user_loader
+def get_user(ident):
+    return models.User.query.get(int(ident))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = UserLogIn()
+    if request.method == 'POST':
+        mail = form.mail.data
+        password = form.password.data
+        user_to_login = db.session.query(models.User).filter_by(mail=mail).first()
+        if check_password_hash(user_to_login.password, password):
+            print("SUUUPER!!!!!!!!!!")
+            login_user(user_to_login)
+            flash(f'Witaj {current_user.name} !')
+            return redirect(url_for('home'))
+        else:
+            flash('Incorrect data for log in')
+            return redirect(url_for('login'))
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out')
+    return redirect(url_for('home'))
 
 @app.route('/')
 @app.route('/home')
@@ -23,6 +61,7 @@ def home():
 
 
 @app.route('/filmslist')
+@login_required
 def films_list():
     """
     This take objects (models.Film) from data base and show in table.
@@ -33,6 +72,7 @@ def films_list():
 
 
 @app.route('/getfilm/<int:id>')
+@login_required
 def get_film(id):
     """
     This create JSON from object (models.Film) in data base.
@@ -44,6 +84,7 @@ def get_film(id):
 
 
 @app.route('/getfilms')
+@login_required
 def get_films():
     """
     This create JSON from filtered objects (models.Film) in data base.
@@ -57,6 +98,7 @@ def get_films():
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@login_required
 def search():
     """
     This searching data from API on site http://www.omdbapi.com/
@@ -88,6 +130,7 @@ def search():
 
 
 @app.route('/details', methods=['GET', 'POST'])
+@login_required
 def film_details():
     """
     This take details from API http://www.omdbapi.com/ by params and show results into table.
@@ -102,6 +145,7 @@ def film_details():
 
 
 @app.route('/filmlist', methods=['GET', 'POST'])
+@login_required
 def film_list():
     """
     This show last searching into table taking from session memory.
@@ -111,6 +155,7 @@ def film_list():
 
 
 @app.route('/filmadding', methods=['GET', 'POST'])
+@login_required
 def film_adding():
     """
     This add object (models.Film) to data base.
@@ -134,6 +179,7 @@ def film_adding():
 
 
 @app.route('/filmdelete', methods=['GET'])
+@login_required
 def film_delete():
     """
     This delete object (models.Film) to data base.
@@ -146,6 +192,7 @@ def film_delete():
 
 
 @app.route('/adduser', methods=['GET', 'POST'])
+@login_required
 def add_user():
     """
     This add User into data base using form.
@@ -156,7 +203,8 @@ def add_user():
                            form.last_name.data,
                            form.age.data,
                            form.mail.data,
-                           form.phone.data)
+                           form.phone.data,
+                           form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('User was added correctly.')
@@ -165,6 +213,7 @@ def add_user():
 
 
 @app.route('/userdetails', methods=['GET'])
+@login_required
 def show_user_details():
     """
     This take object (models.User) and show into table details of this object (User).
@@ -177,6 +226,7 @@ def show_user_details():
 
 
 @app.route('/edituser', methods=['GET', 'POST'])
+@login_required
 def edit_user():
     """
     This edit User details by using form.
@@ -200,6 +250,7 @@ def edit_user():
 
 
 @app.route('/userdelete', methods=['GET'])
+@login_required
 def user_delete():
     """
     This delete object (models.User) to data base.
@@ -212,13 +263,13 @@ def user_delete():
 
 
 @app.route('/userslist')
+@login_required
 def user_list():
     """
     This take objects (models.Users) from data base and show into table.
     """
     all = db.session.query(models.User).all()
     return render_template('userList.html', all=all)
-
 
 
 if __name__ == '__main__':

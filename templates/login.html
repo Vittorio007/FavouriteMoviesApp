@@ -1,17 +1,14 @@
 {% extends "base.html" %}
 
+
 {% block page_content %}
 {% for message in get_flashed_messages() %}
             <p style="color:green">{{ message }}</p>
 {% endfor %}
     <div class="page-header">
-        <h1>Add User</h1>
+        <h1>Log in</h1>
         <form method="POST">
-            <p>{{ form.name.label }} {{ form.name() }}</p>
-            <p>{{ form.last_name.label }} {{ form.last_name() }}</p>
-            <p>{{ form.age.label }} {{ form.age() }}</p>
             <p>{{ form.mail.label }} {{ form.mail() }}</p>
-            <p>{{ form.phone.label }} {{ form.phone() }}</p>
             <p>{{ form.password.label }} {{ form.password() }}</p>
             <p>{{ form.submit() }}</p>
 
