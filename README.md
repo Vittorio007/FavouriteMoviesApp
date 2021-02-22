@@ -2,8 +2,9 @@
 
 ### About Application  
 
-Application where you can open account and create a list of your favourite movies, serials and games.  
-All you can search by search engine which takes data from API site http://www.omdbapi.com/.  
+Application where you can open account and create a list of your favourite movies, serials and games. 
+All you can search by search engine which takes data from API site http://www.omdbapi.com/. 
+You have to log in to your account to search movies ect.
 You can also see more interesting details of every movie or delete movie from the favourite list.  
 Of course when you want to, you can delete your account from data base.
 

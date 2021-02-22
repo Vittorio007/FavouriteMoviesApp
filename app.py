@@ -12,8 +12,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Data_base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'fselifbes;fa;fopjfoi;nfnsfkn'
-# APIKEY = os.environ.get('APIKEY')
-APIKEY='2324a7e9'
+APIKEY = os.environ.get('APIKEY')
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
@@ -22,7 +21,6 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 import models
-
 
 @login_manager.user_loader
 def get_user(ident):
@@ -36,14 +34,14 @@ def login():
         mail = form.mail.data
         password = form.password.data
         user_to_login = db.session.query(models.User).filter_by(mail=mail).first()
-        if check_password_hash(user_to_login.password, password):
-            print("SUUUPER!!!!!!!!!!")
-            login_user(user_to_login)
-            flash(f'Witaj {current_user.name} !')
-            return redirect(url_for('home'))
-        else:
-            flash('Incorrect data for log in')
-            return redirect(url_for('login'))
+        if form.validate_on_submit():
+            if check_password_hash(user_to_login.password, password):
+                login_user(user_to_login)
+                flash(f'Witaj {current_user.name} !')
+                return redirect(url_for('home'))
+            else:
+                flash('Incorrect data for log in')
+                return redirect(url_for('login'))
     return render_template('login.html', form=form)
 
 
@@ -66,9 +64,8 @@ def films_list():
     """
     This take objects (models.Film) from data base and show in table.
     """
-    login_user_id = session['user_id']
-    all = db.session.query(models.Film).filter_by(user_id=login_user_id)
-    return render_template('filmlist.html', all=all, login_user_id=login_user_id)
+    all = db.session.query(models.Film).filter_by(user_id=current_user.id)
+    return render_template('filmlist.html', all=all, login_user_id=current_user.id)
 
 
 @app.route('/getfilm/<int:id>')
@@ -158,23 +155,27 @@ def film_list():
 @login_required
 def film_adding():
     """
-    This add object (models.Film) to data base.
+    This add object (models.Film) to data base on log in user if it not yet on the list.
     """
     title_to_add = request.args.get('title')
-    params = {'t': title_to_add,
-              'apikey': APIKEY}
-    dane = requests.get('http://www.omdbapi.com/', params=params)
-    film_to_add = dane.json()
-    film = models.Film(session['user_id'],
-                       film_to_add['Title'],
-                       film_to_add['Year'],
-                       film_to_add['Runtime'],
-                       film_to_add['Director'],
-                       film_to_add['imdbID']
-                       )
-    db.session.add(film)
-    db.session.commit()
-    item_to_logs = (film_to_add['Type'], film_to_add['Title'])
+    actual_user_films = db.session.query(models.Film).filter_by(user_id=current_user.id).\
+        filter_by(title=title_to_add).first()
+    if actual_user_films:
+        flash('This film is on your list.')
+    else:
+        params = {'t': title_to_add,
+                  'apikey': APIKEY}
+        dane = requests.get('http://www.omdbapi.com/', params=params)
+        film_to_add = dane.json()
+        film = models.Film(current_user.id,
+                           film_to_add['Title'],
+                           film_to_add['Year'],
+                           film_to_add['Runtime'],
+                           film_to_add['Director'],
+                           film_to_add['imdbID']
+                           )
+        db.session.add(film)
+        db.session.commit()
     return redirect(url_for('films_list'))
 
 
@@ -192,23 +193,23 @@ def film_delete():
 
 
 @app.route('/adduser', methods=['GET', 'POST'])
-@login_required
 def add_user():
     """
     This add User into data base using form.
     """
     form = UserForm()
-    if request.method == 'POST':
-        user = models.User(form.name.data,
-                           form.last_name.data,
-                           form.age.data,
-                           form.mail.data,
-                           form.phone.data,
-                           form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('User was added correctly.')
-        return redirect(url_for('user_list'))
+    if form.validate_on_submit():
+        if request.method == 'POST':
+            user = models.User(form.name.data,
+                               form.last_name.data,
+                               form.age.data,
+                               form.mail.data,
+                               form.phone.data,
+                               form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('User was added correctly.')
+            return redirect(url_for('user_list'))
     return render_template('adduser.html', form=form)
 
 
@@ -218,10 +219,7 @@ def show_user_details():
     """
     This take object (models.User) and show into table details of this object (User).
     """
-    user_id = request.args.get('id')
-    session['user_id'] = user_id
-    user_details = db.session.query(models.User).filter_by(id=user_id).first()
-    flash(f'USER {user_id} is log in.')
+    user_details = db.session.query(models.User).filter_by(id=current_user.id).first()
     return render_template('userDetails.html',  user_details=user_details)
 
 

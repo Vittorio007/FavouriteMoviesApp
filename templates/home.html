@@ -4,5 +4,8 @@
 {% block title %}HOME PAGE{% endblock %}
 
 {% block page_content %}
+    {% for message in get_flashed_messages() %}
+            <p style="color:green">{{ message }}</p>
+    {% endfor %}
     <h1>Hello in my App !:)</h1>
 {% endblock %}

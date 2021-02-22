@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block page_content %}
 {% for message in get_flashed_messages() %}
             <p style="color:green">{{ message }}</p>
@@ -11,7 +10,7 @@
             <p>{{ form.mail.label }} {{ form.mail() }}</p>
             <p>{{ form.password.label }} {{ form.password() }}</p>
             <p>{{ form.submit() }}</p>
-
+            {{ form.csrf_token() }}
         </form>
     </div>
 {% endblock %}

@@ -14,7 +14,7 @@
             <p>{{ form.phone.label }} {{ form.phone() }}</p>
             <p>{{ form.password.label }} {{ form.password() }}</p>
             <p>{{ form.submit() }}</p>
-
+            {{ form.csrf_token() }}
         </form>
     </div>
 {% endblock %}

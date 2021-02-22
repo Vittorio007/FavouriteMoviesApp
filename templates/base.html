@@ -25,10 +25,15 @@
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/search">Search</a></li>
-                <li><a href="/adduser">Add new User</a></li>
+                {% if current_user.is_authenticated %}
                 <li><a href="/userslist">Users List</a></li>
-                <li><a href="/login">Log in</a></li>
+                <li><a href="/userdetails">Users Details</a></li>
                 <li><a href="/logout">Log out</a></li>
+                {% else %}
+                <li><a href="/login">Log in</a></li>
+                <li><a href="/adduser">Register new User</a></li>
+                {% endif %}
+
             </ul>
         </div>
     </div>
@@ -37,7 +42,7 @@
 
 {% block content %}
 <div class="container">
-<h3> ACTUAL USER LOG IN {{current_user.name}} </h3>
+<h3> ACTUAL USER LOG IN : {{current_user.name}} </h3>
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
